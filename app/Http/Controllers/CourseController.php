@@ -9,10 +9,13 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::orderBy('title', 'asc')->get();
+        $activeCourses = Course::orderBy('title', 'asc')->where('is_active', true)->get();
 
-        return view('courses.index', ['courses' => $courses]);
+        $inActiveCourses = Course::orderBy('title', 'asc')->where('is_active', false)->get();
+
+        return view('courses.index', ['inActiveCourses' => $inActiveCourses], ['activeCourses' => $activeCourses]);
     }
+
 
     public function create()
     {

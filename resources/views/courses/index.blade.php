@@ -15,13 +15,58 @@
 			</div>
 		@endif
 
-		@if ($courses->isEmpty())
+        @if ($activeCourses->isEmpty())
+			<div class="alert alert-info" role="alert">
+				Er zijn nog geen actieve cursussen.
+			</div>
+		@else
+			<div class="row g-3 mb-5">
+                <h2>Actieve cursussen</h2>
+				@foreach ($activeCourses as $course)
+					<div class="col-12">
+						<div class="card shadow-sm">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+									<div>
+										<h2 class="h5 mb-1">{{ $course->title }}</h2>
+										<p class="text-muted mb-2">Aangemaakt op {{ $course->created_at->format('d/m/Y H:i') }}</p>
+										<p class="mb-0">{{ $course->description }}</p>
+									</div>
+
+									<form action="{{ route('editcourse', $course->id) }}" method="POST" class="ms-auto">
+										@csrf
+										<input type="hidden" name="is_active" value="0">
+										<div class="form-check form-switch">
+											<input
+												class="form-check-input"
+												type="checkbox"
+												id="is_active_{{ $course->id }}"
+												name="is_active"
+												value="1"
+												onchange="this.form.submit()"
+												{{ $course->is_active ? 'checked' : '' }}
+											>
+											<label class="form-check-label" for="is_active_{{ $course->id }}">
+												{{ $course->is_active ? 'Actief' : 'Niet actief' }}
+											</label>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				@endforeach
+			</div>
+		@endif
+
+		@if ($inActiveCourses->isEmpty())
 			<div class="alert alert-info" role="alert">
 				Er zijn nog geen cursussen toegevoegd.
 			</div>
 		@else
 			<div class="row g-3">
-				@foreach ($courses as $course)
+                <h2>Niet actieve cursussen</h2>
+				@foreach ($inActiveCourses as $course)
 					<div class="col-12">
 						<div class="card shadow-sm">
 							<div class="card-body">
